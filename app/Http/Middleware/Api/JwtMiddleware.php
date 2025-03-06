@@ -5,8 +5,8 @@ namespace App\Http\Middleware\Api;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JwtMiddleware
 {
@@ -18,11 +18,12 @@ class JwtMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            if (!JWTAuth::parseToken()->authenticate()) {
+                return redirect('/login')->with('error', 'Token inválido!');
+            }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Token not valid'], 401);
+            return redirect('/login')->with('error', 'Token inválido ou  expirado!');;
         }
-
         return $next($request);
     }
 }
