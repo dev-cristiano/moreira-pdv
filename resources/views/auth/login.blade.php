@@ -28,13 +28,19 @@
             let password = document.getElementById('password').value;
 
             axios.post('/api/login', {
-                    email: email,
-                    password: password
+                    email,
+                    password
                 })
                 .then(response => {
-                    alert('Login bem-sucedido! Token armazenado.');
-                    localStorage.setItem('token', response.data.token);
-                    window.location.href = '/dashboard'; // Redireciona após login
+                    const token = response.data.token;
+
+                    if (token) {
+                        localStorage.setItem('token', token);
+                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+                        window.location.href = '/dashboard';
+                    } else {
+                        alert('Erro ao obter token!');
+                    }
                 })
                 .catch(error => {
                     alert('Erro ao fazer login! Verifique suas credenciais.');
