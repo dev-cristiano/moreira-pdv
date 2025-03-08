@@ -24,7 +24,7 @@
 
 <body class="font-sans antialiased bg-gray-900 text-white">
     <div class="min-h-screen bg-gray-900">
-        @include('layouts.navigation')
+        <!-- include('layouts.navigation') -->
         <main>
             @yield('content')
         </main>
